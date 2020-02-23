@@ -1,7 +1,3 @@
-/*
- * Ultrasonic sensor HC-05 interfacing with AVR ATmega16
- * http://www.electronicwings.com
- */ 
 
 #define F_CPU 7372800UL
 #include <avr/io.h>
