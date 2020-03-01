@@ -3,27 +3,29 @@ Step_motor.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000007a  00000000  00000000  00000054  2**1
+  0 .text         00000128  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  000000ce  2**0
+  1 .data         00000000  00800060  00800060  0000017c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  000000ce  2**0
+  2 .comment      00000030  00000000  00000000  0000017c  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000100  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001ac  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  0000013c  2**0
+  4 .debug_aranges 00000020  00000000  00000000  000001e8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000005c0  00000000  00000000  0000015c  2**0
+  5 .debug_info   00000859  00000000  00000000  00000208  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000054a  00000000  00000000  0000071c  2**0
+  6 .debug_abbrev 000005f6  00000000  00000000  00000a61  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000001c5  00000000  00000000  00000c66  2**0
+  7 .debug_line   00000389  00000000  00000000  00001057  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000024  00000000  00000000  00000e2c  2**2
+  8 .debug_frame  00000024  00000000  00000000  000013e0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000002e4  00000000  00000000  00000e50  2**0
+  9 .debug_str    00000336  00000000  00000000  00001404  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000010  00000000  00000000  00001134  2**0
+ 10 .debug_loc    000002ba  00000000  00000000  0000173a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000028  00000000  00000000  000019f4  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,32 +61,192 @@ Disassembly of section .text:
   5c:	de bf       	out	0x3e, r29	; 62
   5e:	cd bf       	out	0x3d, r28	; 61
   60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
-  64:	0c 94 3b 00 	jmp	0x76	; 0x76 <_exit>
+  64:	0c 94 92 00 	jmp	0x124	; 0x124 <_exit>
 
 00000068 <__bad_interrupt>:
   68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 0000006c <main>:
+
 int main(void)
 {
 	
-	int i;
+	//int period;
+	DDRA = 0x0F; /* Make PORTA lower pins as output */
+  6c:	8f e0       	ldi	r24, 0x0F	; 15
+  6e:	8a bb       	out	0x1a, r24	; 26
+	while (1)
+	{
+		/* Rotate Stepper Motor clockwise with Half step sequence */
+		for(int i=0;i<50;i++)
+		{
+			PORTA = 0x07;  //0111
+  70:	97 e0       	ldi	r25, 0x07	; 7
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x03;  //0011
+  72:	a3 e0       	ldi	r26, 0x03	; 3
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x0B;
+  74:	fb e0       	ldi	r31, 0x0B	; 11
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x09;
+  76:	e9 e0       	ldi	r30, 0x09	; 9
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x0D;
+  78:	7d e0       	ldi	r23, 0x0D	; 13
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x0C;
+  7a:	6c e0       	ldi	r22, 0x0C	; 12
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x0E;
+  7c:	5e e0       	ldi	r21, 0x0E	; 14
+			PORTA = ~PORTA;
+			_delay_ms(period);
+			PORTA = 0x06;
+  7e:	46 e0       	ldi	r20, 0x06	; 6
+#include <avr/io.h> /* Include AVR std. library file */
+#include <util/delay.h> /* Include delay header file */
+
+
+int main(void)
+{
+  80:	22 e3       	ldi	r18, 0x32	; 50
+  82:	30 e0       	ldi	r19, 0x00	; 0
+	while (1)
+	{
+		/* Rotate Stepper Motor clockwise with Half step sequence */
+		for(int i=0;i<50;i++)
+		{
+			PORTA = 0x07;  //0111
+  84:	9b bb       	out	0x1b, r25	; 27
+			PORTA = ~PORTA;
+  86:	8b b3       	in	r24, 0x1b	; 27
+  88:	80 95       	com	r24
+  8a:	8b bb       	out	0x1b, r24	; 27
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  8c:	c3 e3       	ldi	r28, 0x33	; 51
+  8e:	db e2       	ldi	r29, 0x2B	; 43
+  90:	21 97       	sbiw	r28, 0x01	; 1
+  92:	f1 f7       	brne	.-4      	; 0x90 <main+0x24>
+			_delay_ms(period);
+			PORTA = 0x03;  //0011
+  94:	ab bb       	out	0x1b, r26	; 27
+			PORTA = ~PORTA;
+  96:	8b b3       	in	r24, 0x1b	; 27
+  98:	80 95       	com	r24
+  9a:	8b bb       	out	0x1b, r24	; 27
+  9c:	c3 e3       	ldi	r28, 0x33	; 51
+  9e:	db e2       	ldi	r29, 0x2B	; 43
+  a0:	21 97       	sbiw	r28, 0x01	; 1
+  a2:	f1 f7       	brne	.-4      	; 0xa0 <main+0x34>
+			_delay_ms(period);
+			PORTA = 0x0B;
+  a4:	fb bb       	out	0x1b, r31	; 27
+			PORTA = ~PORTA;
+  a6:	8b b3       	in	r24, 0x1b	; 27
+  a8:	80 95       	com	r24
+  aa:	8b bb       	out	0x1b, r24	; 27
+  ac:	c3 e3       	ldi	r28, 0x33	; 51
+  ae:	db e2       	ldi	r29, 0x2B	; 43
+  b0:	21 97       	sbiw	r28, 0x01	; 1
+  b2:	f1 f7       	brne	.-4      	; 0xb0 <main+0x44>
+			_delay_ms(period);
+			PORTA = 0x09;
+  b4:	eb bb       	out	0x1b, r30	; 27
+			PORTA = ~PORTA;
+  b6:	8b b3       	in	r24, 0x1b	; 27
+  b8:	80 95       	com	r24
+  ba:	8b bb       	out	0x1b, r24	; 27
+  bc:	c3 e3       	ldi	r28, 0x33	; 51
+  be:	db e2       	ldi	r29, 0x2B	; 43
+  c0:	21 97       	sbiw	r28, 0x01	; 1
+  c2:	f1 f7       	brne	.-4      	; 0xc0 <main+0x54>
+			_delay_ms(period);
+			PORTA = 0x0D;
+  c4:	7b bb       	out	0x1b, r23	; 27
+			PORTA = ~PORTA;
+  c6:	8b b3       	in	r24, 0x1b	; 27
+  c8:	80 95       	com	r24
+  ca:	8b bb       	out	0x1b, r24	; 27
+  cc:	c3 e3       	ldi	r28, 0x33	; 51
+  ce:	db e2       	ldi	r29, 0x2B	; 43
+  d0:	21 97       	sbiw	r28, 0x01	; 1
+  d2:	f1 f7       	brne	.-4      	; 0xd0 <main+0x64>
+			_delay_ms(period);
+			PORTA = 0x0C;
+  d4:	6b bb       	out	0x1b, r22	; 27
+			PORTA = ~PORTA;
+  d6:	8b b3       	in	r24, 0x1b	; 27
+  d8:	80 95       	com	r24
+  da:	8b bb       	out	0x1b, r24	; 27
+  dc:	c3 e3       	ldi	r28, 0x33	; 51
+  de:	db e2       	ldi	r29, 0x2B	; 43
+  e0:	21 97       	sbiw	r28, 0x01	; 1
+  e2:	f1 f7       	brne	.-4      	; 0xe0 <main+0x74>
+			_delay_ms(period);
+			PORTA = 0x0E;
+  e4:	5b bb       	out	0x1b, r21	; 27
+			PORTA = ~PORTA;
+  e6:	8b b3       	in	r24, 0x1b	; 27
+  e8:	80 95       	com	r24
+  ea:	8b bb       	out	0x1b, r24	; 27
+  ec:	c3 e3       	ldi	r28, 0x33	; 51
+  ee:	db e2       	ldi	r29, 0x2B	; 43
+  f0:	21 97       	sbiw	r28, 0x01	; 1
+  f2:	f1 f7       	brne	.-4      	; 0xf0 <main+0x84>
+			_delay_ms(period);
+			PORTA = 0x06;
+  f4:	4b bb       	out	0x1b, r20	; 27
+			PORTA = ~PORTA;
+  f6:	8b b3       	in	r24, 0x1b	; 27
+  f8:	80 95       	com	r24
+  fa:	8b bb       	out	0x1b, r24	; 27
+  fc:	c3 e3       	ldi	r28, 0x33	; 51
+  fe:	db e2       	ldi	r29, 0x2B	; 43
+ 100:	21 97       	sbiw	r28, 0x01	; 1
+ 102:	f1 f7       	brne	.-4      	; 0x100 <main+0x94>
+ 104:	21 50       	subi	r18, 0x01	; 1
+ 106:	31 09       	sbc	r19, r1
+	int period = 6; /* Set period in between two steps */
 	
-	DDRD = 0xFF;
-  6c:	8f ef       	ldi	r24, 0xFF	; 255
-  6e:	81 bb       	out	0x11, r24	; 17
-			   // IN3 - OUT3 - YELLOW
-			   // IN4 - OUT4 - BLUE
-		
-	//for(i=10;i!=0;i--)
-	//{
-		PORTD=0b00001001; // STEP 1
-  70:	89 e0       	ldi	r24, 0x09	; 9
-  72:	82 bb       	out	0x12, r24	; 18
-  74:	fe cf       	rjmp	.-4      	; 0x72 <main+0x6>
+	while (1)
+	{
+		/* Rotate Stepper Motor clockwise with Half step sequence */
+		for(int i=0;i<50;i++)
+ 108:	09 f0       	breq	.+2      	; 0x10c <main+0xa0>
+ 10a:	bc cf       	rjmp	.-136    	; 0x84 <main+0x18>
+			_delay_ms(period);
+			PORTA = 0x06;
+			PORTA = ~PORTA;
+			_delay_ms(period);
+		}
+		PORTA = 0x07; /* Last step to initial position */
+ 10c:	9b bb       	out	0x1b, r25	; 27
+ 10e:	c3 e3       	ldi	r28, 0x33	; 51
+ 110:	db e2       	ldi	r29, 0x2B	; 43
+ 112:	21 97       	sbiw	r28, 0x01	; 1
+ 114:	f1 f7       	brne	.-4      	; 0x112 <main+0xa6>
+ 116:	cf ef       	ldi	r28, 0xFF	; 255
+ 118:	d7 e4       	ldi	r29, 0x47	; 71
+ 11a:	21 97       	sbiw	r28, 0x01	; 1
+ 11c:	f1 f7       	brne	.-4      	; 0x11a <main+0xae>
+ 11e:	00 c0       	rjmp	.+0      	; 0x120 <main+0xb4>
+ 120:	00 00       	nop
+ 122:	ae cf       	rjmp	.-164    	; 0x80 <main+0x14>
 
-00000076 <_exit>:
-  76:	f8 94       	cli
+00000124 <_exit>:
+ 124:	f8 94       	cli
 
-00000078 <__stop_program>:
-  78:	ff cf       	rjmp	.-2      	; 0x78 <__stop_program>
+00000126 <__stop_program>:
+ 126:	ff cf       	rjmp	.-2      	; 0x126 <__stop_program>
