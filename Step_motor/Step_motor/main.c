@@ -12,7 +12,7 @@ int main(void)
 	
 	while (1)
 	{
-		/* Rotate Stepper Motor clockwise with Half step sequence */
+		
 		for(int i=0;i<50;i++)
 		{
 			PORTA = 0x07;  //0111
