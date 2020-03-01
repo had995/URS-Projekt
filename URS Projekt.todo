@@ -8,13 +8,14 @@ URS Projekt:
          https://maker.pro/arduino/tutorial/how-to-connect-an-ultrasonic-sensor-to-an-arduino -- Zanimljive stvari za izracun udaljenosti(dobro objasnjeno)
          https://www.electronicwings.com/avr-atmega/ultrasonic-module-hc-sr04-interfacing-with-atmega1632 -- spoj atmege i senzora(kod)
          https://lastminuteengineers.com/l298n-dc-stepper-driver-arduino-tutorial/ -- kontrola step motora d
+         https://e-radionica.com/hr/blog/2017/12/10/kkm-dc-motor-driver-dual-h-bridge/ Hbridge kako radi
 
 
 
     ✔ Poslat mail profesoru da pripremi komponenete i pitat ga kad je rok za poslat mu konacan izgled projekta @created(22-02-20 18:16) @done(20-02-25 21:06)
-    ☐ Uzet od profesora jos jedan pločicu za motor, muško muške žičice i pitat ga za ime jocesticka @created(22-02-20 18:07
+    ☐ Pitat  ga za ime jocesticka @created(22-02-20 18:07
     ☐ Ponjet plocicu jel fali jedan seraf @created(22-02-20 18:10)
-    ☐ Podsjetit dorkija da donese metar i šerafciger @created(22-02-20 18:15)
+    ☐ Podsjetit dorkija da donese metar  @created(22-02-20 18:15)
     ✔ Napravit github repositori za projekt @created(22-02-20 18:17) @done(20-02-23 01:39)
     ☐ Provjerit jel rade motori @created(22-02-20 18:10)
     ☐ Pospajat sve komponente na plocicu @created(22-02-20 18:11)
