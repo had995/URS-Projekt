@@ -12,14 +12,27 @@ URS Projekt:
          https://www.electronicwings.com/avr-atmega/atmega1632-adc -- adc za joystick(kod)
          https://scienceprog.com/using-analog-joystick-in-avr-projects/ -- nes napredniji joystick kod
 
-
+     
 
     ✔ Poslat mail profesoru da pripremi komponenete i pitat ga kad je rok za poslat mu konacan izgled projekta @created(22-02-20 18:16) @done(20-02-25 21:06)
     ☐ Podsjetit dorkija da donese metar  @created(22-02-20 18:15)
     ✔ Napravit github repositori za projekt @created(22-02-20 18:17) @done(20-02-23 01:39)
     ✔ Provjerit jel rade motori @created(22-02-20 18:10) @done(20-03-01 20:52)
     ☐ Pospajat sve komponente na plocicu @created(22-02-20 18:11)
-    ☐ Osmislit logiku dizanja stola pomocu motora @created(22-02-20 18:43)
+    ☐ Slozit detaljan izgled projeta u mail profesoru @created(02-03-20 13:37)
+    ☐ Odredit zadatke za daljnu izradu @created(02-03-20 13:37)
+          ☐ Kalibriranje udaljenosti @created(02-03-20 13:38)
+          ☐ Stvaranje profila korisnika @created(02-03-20 13:38)
+          ☐ Mogucnost izbora profila @created(02-03-20 13:39)
+          ☐ Pamcenje odabrane visine za profil @created(02-03-20 13:39)
+          ☐ Automatsko namjestanje visine @created(02-03-20 13:39)
+          ☐ Logika i izrada stola @created(02-03-20 13:40)
+
+
+
+
+
+
    
 
     
