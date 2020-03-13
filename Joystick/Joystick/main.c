@@ -3,14 +3,29 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdlib.h>
+#include <string.h>
+#include <avr/interrupt.h>
+
 
 #include "lcd.h"
 #include "lcd.c"
 
-static int16_t time = 5;
+static int16_t time = 5; // used in rotating motors delays
+char string[10];
+long count;
+double distance;
+
+#define  Trigger_pin	PA0	/* Trigger pin */
+
+int TimerOverflow = 0;
+
+ISR(TIMER1_OVF_vect)
+{
+	TimerOverflow++;	/* Increment Timer Overflow count */
+}
 
 
-void writeLCD(uint16_t adc) {
+void writeLCD(uint16_t adc) { 
 	lcd_clrscr();
 
 	char adcStr[16];
@@ -23,7 +38,7 @@ void writeLCD(uint16_t adc) {
 
 void STEPPER_Init(){
 	
-	DDRB = 0x0F; /* Make PORTD lower pins as output */
+	DDRB = 0x0F; /* Make PORTB lower pins as output */
 }
 
 // ORANGE - IN1 - OUT1	0	0	1	1	1	1	1	 0 
@@ -116,8 +131,54 @@ int ADC_Read(char channel)
 	return(Ain);			/* Return digital value*/
 }
 
+void rotate_motors(int value){
+	
+	if(value < 550){
+		
+		rotate_clockwise();
+	}
+	if(value > 645){
+		
+		rotate_anticlockwise();
+	}
+}
+
+void mesure_distance(){
+	
+	/* Give 10us trigger pulse on trig. pin to HC-SR04 */
+	PORTA |= (1 << Trigger_pin);
+	_delay_us(10);
+	PORTA &= (~(1 << Trigger_pin));
+	
+	TCNT1 = 0;	/* Clear Timer counter */
+	TCCR1B = 0x41;	/* Capture on rising edge, No prescaler*/
+	TIFR = 1<<ICF1;	/* Clear ICP flag (Input Capture flag) */
+	TIFR = 1<<TOV1;	/* Clear Timer Overflow flag */
+
+	/*Calculate width of Echo by Input Capture (ICP) */
+	
+	while ((TIFR & (1 << ICF1)) == 0);/* Wait for rising edge */
+	TCNT1 = 0;	/* Clear Timer counter */
+	TCCR1B = 0x01;	/* Capture on falling edge, No prescaler */
+	TIFR = 1<<ICF1;	/* Clear ICP flag (Input Capture flag) */
+	TIFR = 1<<TOV1;	/* Clear Timer Overflow flag */
+	TimerOverflow = 0;/* Clear Timer overflow count */
+
+	while ((TIFR & (1 << ICF1)) == 0);/* Wait for falling edge */
+	count = ICR1 + (65535 * TimerOverflow);	/* Take count */
+	/* 8MHz Timer freq, sound speed =343 m/s */
+	distance = (double)count / 4.6647;
+	
+	dtostrf(distance, 2, 2, string);/* distance to string */
+	strcat(string, " cm   ");	/* Concat unit i.e.cm */
+	lcd_clrscr();
+	lcd_puts("Dist = ");
+	lcd_puts(string);	/* Print distance */
+}
+
 int main(void)
 {
+	
 	DDRD = _BV(4);
 
 	TCCR1A = _BV(COM1B1) | _BV(WGM10);
@@ -126,30 +187,28 @@ int main(void)
 
 	lcd_init(LCD_DISP_ON);
 	
-	
-	int value, value1;
+	int value;
 	
 	ADC_Init();
 	
-	STEPPER_Init();
+	//STEPPER_Init();
+	
+	DDRA = 0x01;		/* Make trigger pin as output */
+	PORTD = _BV(6);		/* Turn on Pull-up */
+	
+	sei();			/* Enable global interrupt */
+	TIMSK = (1 << TOIE1);	/* Enable Timer1 overflow interrupts */
 
 	while (1) {
 		
-		value = ADC_Read(0);    /* Read ADC channel 0 */
+		value = ADC_Read(7);    /* Read ADC channel 7 */
 		
-		writeLCD(value);        // Ispis vrijednosti 
+		rotate_motors(value);
 		
-		if(value < 652){
-			
-			rotate_clockwise();
-		}
-		if(value > 770){
-			
-			rotate_anticlockwise();
-		}
+		mesure_distance();
 		
+		_delay_ms(50);
 
-		_delay_ms(1);
 	}
 }
 		

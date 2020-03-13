@@ -1,0 +1,33 @@
+URS PROJEKT 
+
+Uvod
+
+Ideja za projekt koju smo dobili je napraviti pomični stol, sa funkcijom dizanja i spuštanja u shvrhu mjenjanja visine za korisnikov sjedeći i 
+stojeći položaj.
+
+Izgled sklopovlja
+
+Projekt se sastoji od 2 stepper motora koja koristimo za funkciju dizanja i spuštanja stola. H-bridge pločice koja mjenja input u pogodan output
+za rotaciju samih motora. Ultrasoničnog senzora kojeg ćemo koristit za kontrolu visine stola. LCD-a za prikaz korisnika, mjenjanje modaliteta
+koristenja( dizanje , spustanje) te analognog joysticka za ručno kontroliranje visine stola.
+
+Funkcijonalnost sklopovlja
+
+Sklopovlje se nalazi spojeno za dno stola, te dva stepper motora spojena sa dvije pomične strane stola. Korisnik koji prvi put koristi sklopovlje 
+namješta visinu stola pomoću anolognog joystick-a u visinu stola prilikom sjedećeg položaja te stojećeg položaja. Pritiskom na gumb korisnik
+sprema visinu stola u svoji profil te automatski taj profil postaje njegov na korištenje. Nakon nekoliko korištenja samog sklopovlja, visina stola
+se automatski namješta za korisnika odabirom odgovarajućeg profila, te korisnik može ponovnim pritiskom gumba mjenjati između sjedeće i stojeće 
+pozicije. U bilo kojem trenutku kotrisnik može mjenjati poziciju stola korištenjem joysticka. Ovakav izgled projekta je osnova, te je podložan 
+dodavanju funkcijonalnosti i mjenjanju same funkcijonalnosti u svrhu kvalitetnijeg dizajna sklopovlja.
+
+
+Github repository projekta 
+
+Na sljedećem linku se nalaze sve potrebne datoteke za pokretanje projekta.
+
+https://github.com/had995/URS-Projekt
+
+
+
+
+
