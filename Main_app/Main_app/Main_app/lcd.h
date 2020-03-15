@@ -40,6 +40,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
+
 /** 
  *  @name  Definitions for MCU Clock Frequency
  *  Adapt the MCU clock frequency in Hz to your target. 
