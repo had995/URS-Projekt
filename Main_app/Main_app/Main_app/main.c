@@ -9,13 +9,15 @@
 
 #include "lcd.h"
 #include "lcd.c"
+#include "stepper.h"
 
-static int16_t time = 5; // used in rotating motors delays
 char string[10];
 long count;
-double distance;
+double  distance;
 
 #define  Trigger_pin	PD0	/* Trigger pin */
+#define  low_margin		510 /* low margin for value of adc which spins motors */
+#define  high_margin    640 /* high margin for value of adc which spins motors */
 
 int TimerOverflow = 0;
 
@@ -38,73 +40,6 @@ void writeLCD(uint16_t adc) {
 	_delay_ms(20);
 }
 
-void STEPPER_Init(){
-	
-	DDRB = 0x0F; /* Make PORTB lower pins as output */
-}
-
-// ORANGE - IN1 - OUT1	0	0	1	1	1	1	1	 0 
-// YELLOW - IN3 - OUT3  1	0	0	0	1	1	1	 1
-// PINK   - IN2 - OUT2	1   1   1   0   0   0   1	 1
-// BLUE   - IN4 - OUT4	1	1	1	1	1	0	0	 0
-// 4 --> NULTI PIN      07  03  0B  09  0D  0C  0E   06 (CLOCKWISE SEQUENCE)
-
-
-void rotate_clockwise(){
-	
-		PORTB = 0x07;  //0111
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x03;  //0011
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x0B;  //1011
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x09;
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x0D;
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x0C;
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x0E;
-		PORTB = ~PORTB;
-		_delay_ms(time);
-		PORTB = 0x06;
-		PORTB = ~PORTB;
-		_delay_ms(time);
-	}
-void rotate_anticlockwise(){
-	
-	PORTB = 0x06;  
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x0E; 
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x0C;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x0D;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x09;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x0B;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x03;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	PORTB = 0x07;
-	PORTB = ~PORTB;
-	_delay_ms(time);
-	
-}
 
 void ADC_Init()
 {
@@ -131,20 +66,8 @@ int ADC_Read(char channel)
 	return(Ain);			/* Return digital value*/
 }
 
-void rotate_motors(int value){
-	
-	if(value < 530){
-		
-		rotate_clockwise();
-	}
-	if(value > 650){
-		
-		rotate_anticlockwise();
-	}
-	
-}
 
-void mesure_distance(){
+double mesure_distance(){
 	
 	/* Give 10us trigger pulse on trig. pin to HC-SR04 */
 	PORTD |= (1 << Trigger_pin);
@@ -174,34 +97,34 @@ void mesure_distance(){
 	/* distance = speed * time / 2 */
 	distance = (double)count / 428.67;
 	
-	if(distance < 15){
+	return distance;
+}
+
+	void distance_to_string(double distance){
 		
-		rotate_clockwise();
-		
-	}else if (distance > 40)
-	{
-		rotate_anticlockwise();
+		dtostrf(distance, 2, 2, string);/* distance to string */
+		strcat(string, " cm   ");	/* Concat unit i.e.cm */
+		lcd_clrscr();
+		lcd_puts("Dist = ");
+		lcd_puts(string);	/* Print distance */
 	}
 	
-	dtostrf(distance, 2, 2, string);/* distance to string */
-	strcat(string, " cm   ");	/* Concat unit i.e.cm */
-	lcd_clrscr();
-	lcd_puts("Dist = ");
-	lcd_puts(string);	/* Print distance */
-}
+	void lcd_main_init(){
+		DDRC = _BV(7);
+
+		TCCR1A = _BV(COM1B1) | _BV(WGM10);
+		TCCR1B = _BV(WGM12) | _BV(CS11);
+		OCR1B = 14;
+
+		lcd_init(LCD_DISP_ON);
+	}
 
 int main(void)
 {
 	
-	DDRC = _BV(7);
-
-	TCCR1A = _BV(COM1B1) | _BV(WGM10);
-	TCCR1B = _BV(WGM12) | _BV(CS11);
-	OCR1B = 14;
-
-	lcd_init(LCD_DISP_ON);
-	
 	int value;
+	
+	lcd_main_init();
 	
 	ADC_Init();
 	
@@ -220,9 +143,11 @@ int main(void)
 		
 		writeLCD(value);
 		
-		rotate_motors(value);
+		rotate_motors(value,low_margin,high_margin);
 		
 		mesure_distance();
+		
+		distance_to_string(distance);
 		
 		_delay_ms(30);
 	}
