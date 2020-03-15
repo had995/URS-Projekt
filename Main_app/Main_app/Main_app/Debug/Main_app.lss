@@ -1085,7 +1085,6 @@ void STEPPER_Init(){
 	
 	while (1) {
 		
-		
 		value = ADC_Read(0);    /* Read ADC channel */
  680:	80 e0       	ldi	r24, 0x00	; 0
  682:	0e 94 65 02 	call	0x4ca	; 0x4ca <ADC_Read>
@@ -1095,7 +1094,7 @@ void STEPPER_Init(){
  688:	0e 94 f5 02 	call	0x5ea	; 0x5ea <writeLCD>
 		
 		rotate_motors(value,low_margin,high_margin);
- 68c:	40 e8       	ldi	r20, 0x80	; 128
+ 68c:	42 e9       	ldi	r20, 0x92	; 146
  68e:	52 e0       	ldi	r21, 0x02	; 2
  690:	6e ef       	ldi	r22, 0xFE	; 254
  692:	71 e0       	ldi	r23, 0x01	; 1

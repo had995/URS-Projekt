@@ -19,7 +19,7 @@ int16_t distance_counter = 0;
 
 #define  Trigger_pin	PD0	/* Trigger pin */
 #define  low_margin		510 /* low margin for value of adc which spins motors */
-#define  high_margin    640 /* high margin for value of adc which spins motors */
+#define  high_margin    658 /* high margin for value of adc which spins motors */
 
 
 #include "distance_sensor.h"
