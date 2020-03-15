@@ -24,9 +24,17 @@ URS Projekt:
           ✔ Kalibriranje udaljenosti @created(02-03-20 13:38) @done(20-03-15 17:32)
           ✔ Uređivanje koda @created(15-03-20 17:32) @done(20-03-15 17:32)
           ☐ Stvaranje profila korisnika @created(02-03-20 13:38)
+               ☐ Txt dokument za svakog korinika @created(15-03-20 17:57)
+               ☐ Unos podataka u dokument @created(15-03-20 17:59)
+               ☐ Izmjena podataka(ažuriranje podataka) @created(15-03-20 17:59)
           ☐ Mogucnost izbora profila @created(02-03-20 13:39)
+               ☐ Key1 - korsnik1 @created(15-03-20 18:00)
+               ☐ Key2 - korisnik2 @created(15-03-20 18:00)
           ☐ Pamcenje odabrane visine za profil @created(02-03-20 13:39)
+               ☐ Prosjecnoa visina stola za sjedecu i stojecu poziciju @created(15-03-20 18:01)
           ☐ Automatsko namjestanje visine @created(02-03-20 13:39)
+               ☐ Key3 - izbor sjedece pozicije @created(15-03-20 18:02)
+               ☐ key4 - izbor stojece pozicije @created(15-03-20 18:03)
           ☐ Logika i izrada stola @created(02-03-20 13:40)
 
 
