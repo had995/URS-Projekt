@@ -66,7 +66,7 @@ int main(void)
 		
 		value = ADC_Read(0);    /* Read ADC channel */
 		
-		writeLCD(value); /* writing adc value */
+		//writeLCD(value); /* writing adc value */
 		
 		rotate_motors(value,low_margin,high_margin);
 		
@@ -78,7 +78,29 @@ int main(void)
 
 		}
 		
-		distance_to_string(distance); /* writing distance */
+		//distance_to_string(distance); /* writing distance */
+		
+		lcd_clrscr();
+		lcd_puts("SELECT USER:");
+		lcd_gotoxy(0,1);
+		lcd_puts("USER1");
+		lcd_gotoxy(7,1);
+		lcd_puts("USER2");
+		
+		if(bit_is_set(PINB,0)){ // user1
+			
+			//save_distance(distance,1);
+			
+			lcd_gotoxy(14,1);
+			lcd_puts("T"); //testing does the key works
+			
+		}
+		if(bit_is_set(PINB,1)){ // user2
+			
+			//save_distance(distance,2);
+			
+		}
+		
 		
 		distance_counter++; 
 		
