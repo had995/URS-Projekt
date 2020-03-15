@@ -4,7 +4,7 @@
 
 void SENSOR_Init(void){
 	
-	DDRD = 0x01;		/* Make trigger pin as output */
+	DDRD = _BV(5);		/* Make trigger pin as output */
 	PORTD = _BV(6);		/* Turn on Pull-up */
 	
 	sei();			/* Enable global interrupt */

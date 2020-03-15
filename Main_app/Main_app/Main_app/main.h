@@ -4,7 +4,7 @@
 
 void STEPPER_Init(){
 	
-	DDRB = 0x0F; /* Make PORTB lower pins as output */
+	DDRB = 0xF0; /* Make PORTB higher pins as output */
 }
 
 /* rotations of a step motor for one step, 5.625 degrees */
@@ -17,28 +17,28 @@ void STEPPER_Init(){
 
 void rotate_clockwise(){
 	
-	PORTB = 0x07;  //0111
+	PORTB = 0x70;  //0111
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x03;  //0011
+	PORTB = 0x30;  //0011
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x0B;  //1011
+	PORTB = 0xB0;  //1011
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x09;
+	PORTB = 0x90;
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x0D;
+	PORTB = 0xD0;
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x0C;
+	PORTB = 0xC0;
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x0E;
+	PORTB = 0xE0;
 	PORTB = ~PORTB;
 	_delay_ms(5);
-	PORTB = 0x06;
+	PORTB = 0x60;
 	PORTB = ~PORTB;
 	_delay_ms(5);
 }

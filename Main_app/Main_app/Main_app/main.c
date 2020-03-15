@@ -15,9 +15,13 @@ char string[10];
 long count;
 double  distance;
 int16_t TimerOverflow = 0;
-int16_t distance_counter = 0; 
+int16_t distance_counter = 0;
+int16_t start_screen_flag = 1;
+int16_t selecting_screen_flag = 0;
+int16_t user1_flag = 0;
+int16_t user2_flag = 0;
 
-#define  Trigger_pin	PD0	/* Trigger pin */
+#define  Trigger_pin	PD5	/* Trigger pin */
 #define  low_margin		510 /* low margin for value of adc which spins motors */
 #define  high_margin    658 /* high margin for value of adc which spins motors */
 
@@ -47,6 +51,8 @@ void lcd_main_init(){
 		OCR1B = 14;
 
 		lcd_init(LCD_DISP_ON);
+		
+		DDRD = 0x01;
 }
 
 int main(void)
@@ -61,6 +67,9 @@ int main(void)
 	STEPPER_Init();
 	
 	SENSOR_Init();
+	
+	PORTB = 0x0F;
+	DDRB = 0;
 	
 	while (1) {
 		
@@ -80,25 +89,65 @@ int main(void)
 		
 		//distance_to_string(distance); /* writing distance */
 		
-		lcd_clrscr();
-		lcd_puts("SELECT USER:");
-		lcd_gotoxy(0,1);
-		lcd_puts("USER1");
-		lcd_gotoxy(7,1);
-		lcd_puts("USER2");
 		
-		if(bit_is_set(PINB,0)){ // user1
+		if(start_screen_flag){
+		
+		lcd_clrscr();
+		lcd_puts("Adjust hight!!!");
+		lcd_gotoxy(0,1);
+		lcd_puts("Key1 --> DONE");
+		
+		}
+		if(bit_is_clear(PINB,0)){
 			
-			//save_distance(distance,1);
+			selecting_screen_flag = 1;
+			start_screen_flag = 0;
+		}
+		
+		
+		if(selecting_screen_flag){
 			
-			lcd_gotoxy(14,1);
-			lcd_puts("T"); //testing does the key works
+			lcd_clrscr();
+			lcd_puts("SELECT USER:");
+			lcd_gotoxy(0,1);
+			lcd_puts("USER1");
+			lcd_gotoxy(7,1);
+			lcd_puts("USER2");
+		}
+		if(bit_is_clear(PINB,0) && selecting_screen_flag){ // user1
+			
+			//save_distance(distance,1); /* saving distance(hight) for user, calculating average 
+			
+			selecting_screen_flag = 0;
+			
+			user1_flag = 1;
 			
 		}
-		if(bit_is_set(PINB,1)){ // user2
+		if(bit_is_clear(PINB,1) && selecting_screen_flag){ // user2
 			
 			//save_distance(distance,2);
 			
+			selecting_screen_flag = 0;
+			
+			user2_flag = 1;
+			
+		}
+		
+		if(selecting_screen_flag == 0 && user1_flag){
+			
+				lcd_clrscr();
+				lcd_puts("WELCOME USER1");
+				lcd_gotoxy(0,1);
+				/* todo : using calculated distance to automatically set hight */
+				lcd_puts("SJEDECA POZICIJA");
+				/* using keys 3 and 4 to switch between sitting and standing */
+		}
+		if(selecting_screen_flag == 0 && user2_flag){
+				
+				lcd_clrscr();
+				lcd_puts("WELCOME USER2");
+			    lcd_gotoxy(0,1);
+				lcd_puts("SJEDECA POZICIJA");
 		}
 		
 		
