@@ -153,8 +153,8 @@ void mesure_distance(){
 	
 	TCNT1 = 0;	/* Clear Timer counter */
 	TCCR1B = 0x41;	/* Capture on rising edge, No prescaler*/
-	TIFR = 1<<ICF1;	/* Clear ICP flag (Input Capture flag) */
-	TIFR = 1<<TOV1;	/* Clear Timer Overflow flag */
+	TIFR = (1<<ICF1);	/* Clear ICP flag (Input Capture flag) */
+	TIFR = (1<<TOV1);	/* Clear Timer Overflow flag */
 
 	/*Calculate width of Echo by Input Capture (ICP) */
 	
@@ -166,9 +166,13 @@ void mesure_distance(){
 	TimerOverflow = 0;/* Clear Timer overflow count */
 
 	while ((TIFR & (1 << ICF1)) == 0);/* Wait for falling edge */
-	count = ICR1 + (65535 * TimerOverflow);	/* Take count */
-	/* 8MHz Timer freq, sound speed =343 m/s */
-	distance = (double)count / 4.6647;
+	count = ICR1 + (65535 * TimerOverflow);	/*When a capture is triggered according to the ICES1 setting, 
+											the counter value is copied into the Input Capture Register (ICR1).
+											The event will also set the Input Capture Flag (ICF1), and this
+											can be used to cause an Input Capture Interrupt, if this interrupt is enabled. */
+	/* 7372800 MHz Timer freq, 0.136us time for one instruction, sound speed =343 m/s, 34300 cm/s */
+	/* distance = speed * time / 2 */
+	distance = (double)count / 428.67;
 	
 	if(distance < 15){
 		
@@ -208,6 +212,7 @@ int main(void)
 	
 	sei();			/* Enable global interrupt */
 	TIMSK = (1 << TOIE1);	/* Enable Timer1 overflow interrupts */
+	TCCR1A = 0;
 
 	while (1) {
 		
