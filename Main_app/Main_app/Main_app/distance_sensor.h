@@ -47,17 +47,17 @@ double mesure_distance(){
 											can be used to cause an Input Capture Interrupt, if this interrupt is enabled. */
 	/* 7372800 MHz Timer freq, 0.136us time for one instruction, sound speed =343 m/s, 34300 cm/s */
 	/* distance = speed * time / 2 */
-	distance = (double)count / 428.67;
+	distance = (float)count / 428.67;
 	
 	return distance;
 }
 
-void distance_to_string(double distance){
+void distance_to_string(float distance){
 		
 		dtostrf(distance, 2, 2, string);/* distance to string */
-		strcat(string, " cm   ");	/* Concat unit i.e.cm */
-		lcd_clrscr();
-		lcd_puts("Dist = ");
+		strcat(string, " cm  ");	/* Concat unit i.e.cm */
+		lcd_puts("Visina: ");
+		lcd_gotoxy(8,1);
 		lcd_puts(string);	/* Print distance */
 }
 	

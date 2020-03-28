@@ -1,10 +1,12 @@
 #define F_CPU 7372800UL
 
 #include <avr/io.h>
+#include <stdio.h>
 #include <util/delay.h>
 #include <stdlib.h>
 #include <string.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>		/* used for writing  to eeprom */
 
 #include "lcd.h"
 #include "lcd.c"
@@ -13,7 +15,7 @@
 
 char string[10];
 long count;
-double  distance;
+float  distance, distance_red = 0;
 int16_t TimerOverflow = 0;
 int16_t distance_counter = 0;
 int16_t start_screen_flag = 1;
@@ -21,7 +23,7 @@ int16_t selecting_screen_flag = 0;
 int16_t user1_flag = 0;
 int16_t user2_flag = 0;
 
-#define  Trigger_pin	PD5	/* Trigger pin */
+#define  Trigger_pin	PD5	/* Trigger pin, PD6 ECHO pin */ 
 #define  low_margin		510 /* low margin for value of adc which spins motors */
 #define  high_margin    658 /* high margin for value of adc which spins motors */
 
@@ -30,13 +32,11 @@ int16_t user2_flag = 0;
 
 
 void writeLCD(uint16_t adc) { 
-	lcd_clrscr();
 
 	char adcStr[16];
 	itoa(adc, adcStr, 10);
-	lcd_gotoxy(0,1);
-	lcd_puts("ADC: ");
-	lcd_gotoxy(6,1);
+	lcd_gotoxy(11,1);
+	lcd_puts(" ");
 	lcd_puts(adcStr);
 	
 	_delay_ms(10);
@@ -54,6 +54,22 @@ void lcd_main_init(){
 		
 		DDRD = 0x01;
 }
+
+void save_distance(float distance, int user){
+	
+	int pozicija = 20 + user;
+	
+	eeprom_write_float((float *) pozicija, distance); /* writing distance value to nth position in eeprom */
+	
+}
+
+void read_distance(int user){
+	
+	int pozicija = 20 + user;
+	
+	distance_red = eeprom_read_float((float *) pozicija);
+}
+
 
 int main(void)
 {
@@ -87,9 +103,6 @@ int main(void)
 
 		}
 		
-		//distance_to_string(distance); /* writing distance */
-		
-		
 		if(start_screen_flag){
 		
 		lcd_clrscr();
@@ -113,10 +126,11 @@ int main(void)
 			lcd_puts("USER1");
 			lcd_gotoxy(7,1);
 			lcd_puts("USER2");
+
 		}
 		if(bit_is_clear(PINB,0) && selecting_screen_flag){ // user1
 			
-			//save_distance(distance,1); /* saving distance(hight) for user, calculating average 
+			save_distance(distance,1); /* saving distance(hight) for user, calculating average */
 			
 			selecting_screen_flag = 0;
 			
@@ -134,20 +148,23 @@ int main(void)
 		}
 		
 		if(selecting_screen_flag == 0 && user1_flag){
-			
+				
+				read_distance(1);
 				lcd_clrscr();
-				lcd_puts("WELCOME USER1");
+				lcd_puts("USER1 SJEDECA");
 				lcd_gotoxy(0,1);
 				/* todo : using calculated distance to automatically set hight */
-				lcd_puts("SJEDECA POZICIJA");
 				/* using keys 3 and 4 to switch between sitting and standing */
+				distance_to_string(distance_red);
+				
+				
 		}
 		if(selecting_screen_flag == 0 && user2_flag){
 				
 				lcd_clrscr();
-				lcd_puts("WELCOME USER2");
+				lcd_puts("USER2 SJEDECA");
 			    lcd_gotoxy(0,1);
-				lcd_puts("SJEDECA POZICIJA");
+				distance_to_string(distance);
 		}
 		
 		
