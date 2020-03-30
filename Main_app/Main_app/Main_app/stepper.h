@@ -15,7 +15,7 @@ void STEPPER_Init(){
 // BLUE   - IN4 - OUT4	1	1	1	1	1	0	0	 0
 // 4 --> NULTI PIN      07  03  0B  09  0D  0C  0E   06 (CLOCKWISE SEQUENCE)
 
-void rotate_clockwise(){
+void rotate_clockwise(){ 
 	
 	PORTB = 0x70;  //0111
 	PORTB = ~PORTB;

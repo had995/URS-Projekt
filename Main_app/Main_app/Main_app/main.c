@@ -13,7 +13,7 @@
 #include "stepper.h"
 #include "adc.h"
 
-char string[10];
+char string[15];
 long count;
 float  distance, distance_red = 0;
 int16_t TimerOverflow = 0;
@@ -71,6 +71,14 @@ int read_distance(int user){
 	return distance_red;
 }
 
+void show_distance(){
+	
+	
+	distance_to_string(mesure_distance());
+	
+	_delay_ms(3000);
+}
+
 
 int main(void)
 {
@@ -94,39 +102,49 @@ int main(void)
 		
 		//writeLCD(value); /* writing adc value */
 		
-		rotate_motors(value,low_margin,high_margin);
+
+		//rotate_motors(value,low_margin,high_margin);
 		
-		if(distance_counter == 20){ /* measuring distance every 200 ms */
+		/*if(distance_counter == 20){ // measuring distance every 200 ms 
 		
 		mesure_distance();
 		
 		distance_counter = 0;
 
-		}
+		} */
 		
 		if(start_screen_flag){
 		
 		lcd_clrscr();
-		lcd_puts("USER1   USER2");
+		lcd_puts("USER1 USER2 VIS");
 		lcd_gotoxy(0,1);
-		lcd_puts("KEY1    KEY2");
+		lcd_puts("KEY1  KEY2 KEY3");
 		
-		}
+		
 		if(bit_is_clear(PINB,0)){
 			
 			user1_flag = 1; // user 1 is chosen
 			start_screen_flag = 0;
-			_delay_ms(200);
+			_delay_ms(200); // debounce
 		}else if(bit_is_clear(PINB,1)){
 			
 			user2_flag = 1;  // user 2 is chosen
 			start_screen_flag = 0;
 			_delay_ms(200);
+		}else if(bit_is_clear(PINB,2)){
+		
+		show_distance();
+		_delay_ms(200);
+		
+			}
 		}
+		
+		
 		
 		
 		if(user1_flag && start_screen_flag == 0){
 			
+			user2_flag = 0;
 			
 			if(read_distance(1) != 0){
 				
@@ -146,6 +164,8 @@ int main(void)
 				lcd_gotoxy(0,1);
 				lcd_puts("KEY1 ---> DONE");
 				
+				rotate_motors(value,low_margin,high_margin);
+				
 				if(bit_is_clear(PINB,0)){
 					
 					distance = mesure_distance();
@@ -164,10 +184,9 @@ int main(void)
 				if(distance_user1_exists){
 					
 					lcd_clrscr();
-					lcd_puts("STOJECA POVRATAK:");
+					lcd_puts("STD P. RESET ESC");
 					lcd_gotoxy(0,1);
-					lcd_puts("KEY1 KEY2");
-					distance_to_string(distance);
+					lcd_puts("KEY1 KEY2 KEY3");
 					
 					if(bit_is_clear(PINB,0)){
 						
@@ -175,9 +194,18 @@ int main(void)
 						// mby 2 memory spaces for each user
 						
 						_delay_ms(200);
-						
 					}
 					if(bit_is_clear(PINB,1)){
+						
+						save_distance(0,1); // writing 0 to "reset" user height
+						
+						start_screen_flag = 1;
+						distance_user1_exists = 0;
+						
+						_delay_ms(200);
+					}
+					
+					if(bit_is_clear(PINB,2)){
 						
 						start_screen_flag = 1; // return
 						
@@ -186,6 +214,8 @@ int main(void)
 				}
 			}
 			if(user2_flag && start_screen_flag == 0){
+				
+				user1_flag = 0;
 				
 				
 				if(read_distance(2) != 0){
@@ -206,6 +236,8 @@ int main(void)
 					lcd_gotoxy(0,1);
 					lcd_puts("KEY1 ---> DONE");
 					
+					rotate_motors(value,low_margin,high_margin);
+					
 					if(bit_is_clear(PINB,0)){
 						
 						distance = mesure_distance();
@@ -223,11 +255,11 @@ int main(void)
 				
 				if(distance_user2_exists){
 					
+					
 					lcd_clrscr();
-					lcd_puts("STOJECA POVRATAK:");
+					lcd_puts("STD P. RESET ESC");
 					lcd_gotoxy(0,1);
-					lcd_puts("KEY1 KEY2");
-					distance_to_string(distance);
+					lcd_puts("KEY1 KEY2 KEY3");
 					
 					if(bit_is_clear(PINB,0)){
 						
@@ -239,15 +271,24 @@ int main(void)
 					}
 					if(bit_is_clear(PINB,1)){
 						
-						start_screen_flag = 1; // return
+						save_distance(0,2); // writing 0 to "reset" user height
+						
+						start_screen_flag = 1;
+						distance_user2_exists = 0;
 						
 						_delay_ms(200);
+					}
+					
+					if(bit_is_clear(PINB,2)){
+						
+						start_screen_flag = 1; // return
+						
+						_delay_ms(500);
 					}
 				}
 			}
 			
-			
-		distance_counter++; 
+		//distance_counter++; 
 		
 		_delay_ms(10);
 	}

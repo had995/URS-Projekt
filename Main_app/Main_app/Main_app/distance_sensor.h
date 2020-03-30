@@ -19,7 +19,7 @@ ISR(TIMER1_OVF_vect)
 	TimerOverflow++;	/* Increment Timer Overflow count */
 }
 
-double mesure_distance(){
+float mesure_distance(){
 	
 	/* Give 10us trigger pulse on trig. pin to HC-SR04 */
 	PORTD |= (1 << Trigger_pin);
@@ -52,12 +52,12 @@ double mesure_distance(){
 	return distance;
 }
 
-void distance_to_string(double distance){
+void distance_to_string(float distance){
 		
-		dtostrf(distance, 2, 2, string);/* distance to string */
-		//strcat(string, " cm");	/* Concat unit i.e.cm */
+		dtostrf((double)distance, 2, 2, string);/* distance to string */
+		//strcat(string, " cm ");	/* Concat unit i.e.cm */
+		lcd_clrscr();
 		//lcd_puts("Visina: ");
-		lcd_gotoxy(10,1);
 		lcd_puts(string);	/* Print distance */
 }
 	
