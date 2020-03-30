@@ -56,7 +56,7 @@ void lcd_main_init(){
 
 void save_distance(float distance, int user){
 	
-	int pozicija = 20 + user;
+	int pozicija = 100 + user;
 	
 	eeprom_write_float((float *) pozicija, distance); /* writing distance value to nth position in eeprom */
 	
@@ -64,7 +64,7 @@ void save_distance(float distance, int user){
 
 int read_distance(int user){
 	
-	int pozicija = 30 + user;
+	int pozicija = 100 + user;
 	
 	distance_red = eeprom_read_float((float *) pozicija);
 	
@@ -116,14 +116,17 @@ int main(void)
 			
 			user1_flag = 1; // user 1 is chosen
 			start_screen_flag = 0;
+			_delay_ms(200);
 		}else if(bit_is_clear(PINB,1)){
 			
 			user2_flag = 1;  // user 2 is chosen
 			start_screen_flag = 0;
+			_delay_ms(200);
 		}
 		
 		
 		if(user1_flag && start_screen_flag == 0){
+			
 			
 			if(read_distance(1) != 0){
 				
@@ -143,13 +146,17 @@ int main(void)
 				lcd_gotoxy(0,1);
 				lcd_puts("KEY1 ---> DONE");
 				
-				if(bit_is_clear(PINB,1)){
+				if(bit_is_clear(PINB,0)){
 					
-					save_distance(mesure_distance(),1); /* saving distance(hight) for user, calculating average */
+					distance = mesure_distance();
+					
+					save_distance(distance,1); /* saving distance(hight) for user, calculating average */
 					
 					// standing position ???
 				
-				//ok, problem je da on pristupi ovoj if petlji iako nesmije, zašto? a niti ne spremi udaljenost
+				distance_user1_exists = 1;
+				
+				_delay_ms(200);
 				
 				}
 			}
@@ -159,20 +166,86 @@ int main(void)
 					lcd_clrscr();
 					lcd_puts("STOJECA POVRATAK:");
 					lcd_gotoxy(0,1);
-					lcd_puts("KEY1    KEY2");
+					lcd_puts("KEY1 KEY2");
+					distance_to_string(distance);
 					
 					if(bit_is_clear(PINB,0)){
 						
 						// set a logic to changing to a standing position
 						// mby 2 memory spaces for each user
 						
+						_delay_ms(200);
+						
 					}
 					if(bit_is_clear(PINB,1)){
 						
 						start_screen_flag = 1; // return
+						
+						_delay_ms(200);
 					}	
 				}
 			}
+			if(user2_flag && start_screen_flag == 0){
+				
+				
+				if(read_distance(2) != 0){
+					
+					distance = read_distance(2);
+					
+					// if hight already exists, set the hight of a table to this
+					// also starting position( sitting standing should be automatically determined
+					// depending of a hight
+					// average sitting table hight is 75 cm, so everything under 100 should be sitting
+					
+					distance_user2_exists = 1;
+				}
+				else{
+					
+					lcd_clrscr();
+					lcd_puts("POSTAVITE VISINU");
+					lcd_gotoxy(0,1);
+					lcd_puts("KEY1 ---> DONE");
+					
+					if(bit_is_clear(PINB,0)){
+						
+						distance = mesure_distance();
+						
+						save_distance(distance,2); /* saving distance(hight) for user, calculating average */
+						
+						// standing position ???
+						
+						distance_user2_exists = 1;
+						
+						_delay_ms(200);
+						
+					}
+				}
+				
+				if(distance_user2_exists){
+					
+					lcd_clrscr();
+					lcd_puts("STOJECA POVRATAK:");
+					lcd_gotoxy(0,1);
+					lcd_puts("KEY1 KEY2");
+					distance_to_string(distance);
+					
+					if(bit_is_clear(PINB,0)){
+						
+						// set a logic to changing to a standing position
+						// mby 2 memory spaces for each user
+						
+						_delay_ms(200);
+						
+					}
+					if(bit_is_clear(PINB,1)){
+						
+						start_screen_flag = 1; // return
+						
+						_delay_ms(200);
+					}
+				}
+			}
+			
 			
 		distance_counter++; 
 		

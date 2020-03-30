@@ -52,12 +52,12 @@ double mesure_distance(){
 	return distance;
 }
 
-void distance_to_string(float distance){
+void distance_to_string(double distance){
 		
 		dtostrf(distance, 2, 2, string);/* distance to string */
-		strcat(string, " cm  ");	/* Concat unit i.e.cm */
-		lcd_puts("Visina: ");
-		lcd_gotoxy(8,1);
+		//strcat(string, " cm");	/* Concat unit i.e.cm */
+		//lcd_puts("Visina: ");
+		lcd_gotoxy(10,1);
 		lcd_puts(string);	/* Print distance */
 }
 	
