@@ -31,10 +31,14 @@ URS Projekt:
           ☐ Automatsko namjestanje visine @created(02-03-20 13:39)
           ☐ Logika i izrada stola @created(02-03-20 13:40)
 
+1. 1. put -- automatski odredit dali je to sjececa ili stojeca pozicija(2 pozicije u memoriji)
+     --key1 -- suprotna pozicija(prvi put -- postavit i spremit visina) inca ucitat iz memorije proslu
 
+2. Logika dizanja i spuštanja stola
 
+3. Automatsko postavljanje visine stola nakon odabira korisnika 
 
-
+4. Opcija gdje korisnik pritiskom na key1 i key2 sam određuje visinu stola ( postavit niki minimum i maksimum) // samo 3 key i 4 za potvrdit
 
    
 

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <avr/interrupt.h>
-#include <avr/eeprom.h>		/* used for writing  to eeprom */
+#include <avr/eeprom.h>		/* used for writing  to eeprom */ 
 
 #include "lcd.h"
 #include "lcd.c"
@@ -184,7 +184,7 @@ int main(void)
 				if(distance_user1_exists){
 					
 					lcd_clrscr();
-					lcd_puts("STD P. RESET ESC");
+					lcd_puts("STD P. RESET ESC"); // 16 charova
 					lcd_gotoxy(0,1);
 					lcd_puts("KEY1 KEY2 KEY3");
 					
