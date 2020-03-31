@@ -15,7 +15,7 @@ URS Projekt:
      
 
     ✔ Poslat mail profesoru da pripremi komponenete i pitat ga kad je rok za poslat mu konacan izgled projekta @created(22-02-20 18:16) @done(20-02-25 21:06)
-    ☐ Podsjetit dorkija da donese metar  @created(22-02-20 18:15)
+    ✘ Podsjetit dorkija da donese metar  @created(22-02-20 18:15) @cancelled(20-03-31 17:40)
     ✔ Napravit github repositori za projekt @created(22-02-20 18:17) @done(20-02-23 01:39)
     ✔ Provjerit jel rade motori @created(22-02-20 18:10) @done(20-03-01 20:52)
     ✔ Pospajat sve komponente na plocicu @created(22-02-20 18:11) @done(20-03-13 05:12)
@@ -26,11 +26,9 @@ URS Projekt:
           ✔ Mogucnost izbora profila @created(02-03-20 13:39) @done(20-03-30 12:46)
                ✔ Key1 - korsnik1 @created(15-03-20 18:00) @done(20-03-30 12:46)
                ✔ Key2 - korisnik2 @created(15-03-20 18:00) @done(20-03-30 12:46)
-          ☐ Pamcenje odabrane visine za profil @created(02-03-20 13:39)
-               ☐ Prošla visina stola za sjedecu i stojecu poziciju @created(15-03-20 18:01)
+          ✔ Pamcenje odabrane visine za profil @created(02-03-20 13:39) @done(20-03-31 17:40)
+               ✔ Prošla visina stola za sjedecu i stojecu poziciju @created(15-03-20 18:01) @done(20-03-31 17:41)
           ☐ Automatsko namjestanje visine @created(02-03-20 13:39)
-               ☐ Key3 - izbor sjedece pozicije @created(15-03-20 18:02)
-               ☐ key4 - izbor stojece pozicije @created(15-03-20 18:03)
           ☐ Logika i izrada stola @created(02-03-20 13:40)
 
 
